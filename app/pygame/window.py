@@ -5,7 +5,6 @@ from .config import ALTO_VENTANA, ANCHO_VENTANA, AZUL, BLANCO, NEGRO, ROJO, TAMA
 
 pygame.init()
 
-
 @dataclass
 class Window:
     window = pygame.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))

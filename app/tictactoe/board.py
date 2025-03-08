@@ -4,7 +4,8 @@ from dataclasses import dataclass, field
 @dataclass
 class Board:
     board: list[list[str]] = field(default_factory=lambda: [["" for _ in range(3)] for _ in range(3)])
-
+    turn: int = field(default=0) 
+    
     def show_board(self) -> None:
         for fila in self.board:
             print("|".join([casilla if casilla != "" else " " for casilla in fila]))
