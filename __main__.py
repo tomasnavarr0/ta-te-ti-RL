@@ -11,17 +11,33 @@ def main():
     window = Window()
     MODEL_PATH = "best_agent.pkl"
     
-    # Cargar o entrenar agentes
-    if not os.path.exists(MODEL_PATH):
-        agent1 = QLearningAgent(alpha=0.5, gamma=0.9, epsilon=0.3)
-        agent2 = QLearningAgent(alpha=0.5, gamma=0.9, epsilon=0.3)
-        
-        trainer = TrainingManager(agent1, agent2)
-        print("Entrenando agentes...")
-        trainer.train_dueling_agents(episodes=2500000, save_path=MODEL_PATH)
-        print("Entrenamiento completado!")
+    # Modo de operación (cambiar según necesidad)
+    TRAINING_MODE = True  # True para ver entrenamiento, False para jugar
+    VISUALIZE_TRAINING = True  # Mostrar entrenamiento en tiempo real
     
-    best_agent = TrainingManager.load_agent(MODEL_PATH)
+    if TRAINING_MODE:
+        if os.path.exists(MODEL_PATH):
+            best_agent = TrainingManager.load_agent(MODEL_PATH)
+        else:
+            agent1 = QLearningAgent(alpha=0.3, gamma=0.9, epsilon=0.2)
+            agent2 = QLearningAgent(alpha=0.3, gamma=0.9, epsilon=0.2)
+            
+            # Entrenar con visualización
+            trainer = TrainingManager(agent1, agent2, visualize=VISUALIZE_TRAINING)
+            trainer.train_dueling_agents(episodes=2000, save_path=MODEL_PATH)  # Reducir episodios para demo
+            
+            best_agent = TrainingManager.load_agent(MODEL_PATH)
+        
+        if VISUALIZE_TRAINING:
+            # Mantener ventana abierta después de entrenar
+            while True:
+                window.window.fill((255,255,255))
+                window.draw_table([[None]*3 for _ in range(3)])
+                pygame.display.flip()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
 
     # Configurar juego humano vs IA
     player_scores = {"X": 0, "O": 0}

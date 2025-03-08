@@ -13,10 +13,12 @@ class QLearningAgent:
     q_table: DefaultDict[QKey, float] = field(
         default_factory=lambda: defaultdict(float)
     )
-    alpha: float = 0.5,
-    gamma: float = 0.9,
-    epsilon: float = 0.1,
+    alpha: float = 0.7
+    gamma: float = 0.95
+    epsilon: float = 0.8
     wins: int = 0
+    training_steps: int = 0
+    exploration_decay: float = 0.9999
 
     def get_state_key(self, state: list[list[str]]) -> StateKey:
         """Convierte el estado en una tupla inmutable para usar como clave."""
@@ -26,10 +28,15 @@ class QLearningAgent:
         self,
         state: list[list[str]],
         available_actions: list[tuple[int, int]],
-        epsilon: float|None = None
+        epsilon: float | None = None
     ) -> tuple[int, int]:
-        """Selecciona una acción usando política ε-greedy."""
-        epsilon = epsilon if epsilon is not None else self.epsilon
+        # Decaimiento exponencial continuo (nueva implementación)
+        self.training_steps += 1
+        self.epsilon *= self.exploration_decay  # <-- Nueva línea clave
+        self.epsilon = max(self.epsilon, 0.01)  # Mínimo de 1% de exploración
+        
+        epsilon = epsilon if epsilon is not None else self.epsilon  # Usar el epsilon decayendo
+        
         state_key = self.get_state_key(state)
         
         if random.random() < epsilon:
