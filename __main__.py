@@ -1,13 +1,12 @@
 import pygame
 import sys
-from app.tictactoe import TicTacToeMovements
-from app.pygame import Window
+from app.tictactoe.movements import TicTacToeMovements
+from app.pygame.window import Window
 
 
 def main():
     board = TicTacToeMovements()
     window = Window()
-
     actual_player = "X"
     active_player = True
 
@@ -22,10 +21,10 @@ def main():
                     winner = board.check_winner()
                     if winner:
                         active_player = False
-                        if winner == "Empate":
-                            print("¡Es un empate!")
+                        if winner == "Draft":
+                            print("Is a draft!")
                         else:
-                            print(f"¡{winner} ha ganado!")
+                            print(f"¡{winner} has won!")
                     actual_player = "O" if actual_player == "X" else "X"
         window.draw_table(board.board)
 
