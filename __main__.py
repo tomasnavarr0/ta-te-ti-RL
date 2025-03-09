@@ -16,17 +16,12 @@ def main():
     VISUALIZE_TRAINING = True  # Mostrar entrenamiento en tiempo real
     
     if TRAINING_MODE:
-        if os.path.exists(MODEL_PATH):
-            best_agent = TrainingManager.load_agent(MODEL_PATH)
-        else:
-            agent1 = QLearningAgent(alpha=0.3, gamma=0.9, epsilon=0.2)
-            agent2 = QLearningAgent(alpha=0.3, gamma=0.9, epsilon=0.2)
-            
-            # Entrenar con visualización
-            trainer = TrainingManager(agent1, agent2, visualize=VISUALIZE_TRAINING)
-            trainer.train_dueling_agents(episodes=2000, save_path=MODEL_PATH)  # Reducir episodios para demo
-            
-            best_agent = TrainingManager.load_agent(MODEL_PATH)
+        agent1 = QLearningAgent(alpha=0.3, gamma=0.9, epsilon=0.2, name="Agent-1")
+        agent2 = QLearningAgent(alpha=0.3, gamma=0.9, epsilon=0.2, name="Agent-2")
+        
+        # Entrenar con visualización
+        trainer = TrainingManager(agent1, agent2, visualize=VISUALIZE_TRAINING)
+        trainer.train_dueling_agents(episodes=1000, save_path=MODEL_PATH)  # Reducir episodios para demo
         
         if VISUALIZE_TRAINING:
             # Mantener ventana abierta después de entrenar
@@ -38,6 +33,9 @@ def main():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
+
+    if os.path.exists(MODEL_PATH):
+        best_agent = TrainingManager.load_agent(MODEL_PATH)
 
     # Configurar juego humano vs IA
     player_scores = {"X": 0, "O": 0}
